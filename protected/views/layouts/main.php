@@ -1,59 +1,80 @@
-<?php /* @var $this Controller */ ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="language" content="en">
+<!doctype html>
+<html lang="en">
 
-	<!-- blueprint CSS framework -->
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection">
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print">
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection">
-	<![endif]-->
-
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css">
-
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
-</head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="<?= Yii::app()->request->baseUrl ?>/libraries/bootstrap/5.3.3/dist/css/bootstrap.css">
+<title><?= CHtml::encode($this->pageTitle) ?></title>
 
 <body>
 
-<div class="container" id="page">
+<nav class="bg-info navbar navbar-expand ">
+<div class="container-fluid">
+<a class="navbar-brand" href="#">
+    <?= CHtml::encode(Yii::app()->name) ?>
+</a>
+<div class="collapse navbar-collapse">
+<ul class="mb-2 mb-lg-0 me-auto navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link" href="<?= $this->createUrl('/site/index') ?>">
+            Home
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="<?= $this->createUrl('/site/page',
+		  ['view' => 'about']) ?>">About</a>
+    </li>
+	<li class="nav-item">
+        <a class="nav-link" href="<?= $this->createUrl('/site/contact') ?>">
+            Contact
+        </a>
+    </li>
+	<?php if (Yii::app()->user->isGuest): ?>
+	<li class="nav-item">
+        <a class="nav-link" href="<?= $this->createUrl('/site/login') ?>">
+            Login
+        </a>
+    </li>
+	<?php else: ?>
+	<li class="nav-item">
+        <a class="nav-link" href="<?= $this->createUrl('/site/logout') ?>">
+            Logout (<?= Yii::app()->user->name ?>)
+        </a>
+    </li>
+	<?php endif ?>
+</ul>
+</div>
+</div>
+</nav>
 
-	<div id="header">
-		<div id="logo"><?php echo CHtml::encode(Yii::app()->name); ?></div>
-	</div><!-- header -->
+<div class="container-fluid">
 
-	<div id="mainmenu">
-		<?php $this->widget('zii.widgets.CMenu',array(
-			'items'=>array(
-				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-				array('label'=>'Contact', 'url'=>array('/site/contact')),
-				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
-			),
-		)); ?>
-	</div><!-- mainmenu -->
-	<?php if(isset($this->breadcrumbs)):?>
-		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
-			'links'=>$this->breadcrumbs,
-		)); ?><!-- breadcrumbs -->
-	<?php endif?>
+<?php if (isset($this->breadcrumbs)): ?>
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item">
+			<a href="#">Home</a>
+		</li>
+		<?php foreach ($this->breadcrumbs as $c => $crumb): ?>
+		<?php if ($c == array_key_last($this->breadcrumbs)): ?>
+		<li aria-current="page" class="breadcrumb-item active">
+			<?= $crumb ?>
+		</li>
+		<?php else: ?>
+		<li class="breadcrumb-item">
+			<a href="#"><?= $crumb ?></a>
+		</li>
+		<?php endif ?>
+		<?php endforeach ?>
+	</ol>
+</nav>
+<?php endif ?>
 
-	<?php echo $content; ?>
+<?= $content ?>
 
-	<div class="clear"></div>
+</div>
 
-	<div id="footer">
-		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
-		All Rights Reserved.<br/>
-		<?php echo Yii::powered(); ?>
-	</div><!-- footer -->
-
-</div><!-- page -->
+<script src="<?= Yii::app()->request->baseUrl ?>/libraries/bootstrap/5.3.3/dist/js/bootstrap.bundle.js"></script>
 
 </body>
 </html>
