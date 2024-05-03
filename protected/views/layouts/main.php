@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="<?= Yii::app()->request->baseUrl ?>/libraries/bootstrap/5.3.3/dist/css/bootstrap.css">
+<link rel="stylesheet" href="<?= Yii::app()->request->baseUrl ?>/libraries/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
 <title><?= CHtml::encode($this->pageTitle) ?></title>
 
 <body>
