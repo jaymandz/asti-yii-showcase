@@ -5,14 +5,14 @@
  *
  * The followings are the available columns in table 'tbl_document':
  * @property string $id
- * @property string $directory_id
+ * @property string $folder_id
  * @property string $name
  * @property string $mime
  * @property string $content
  *
  * The followings are the available model relations:
  * @property TblComment[] $tblComments
- * @property TblDirectory $directory
+ * @property TblFolder $folder
  */
 class Document extends CActiveRecord
 {
@@ -33,10 +33,10 @@ class Document extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, mime, content', 'required'),
-			array('directory_id', 'length', 'max'=>10),
+			array('folder_id', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, directory_id, name, mime, content', 'safe', 'on'=>'search'),
+			array('id, folder_id, name, mime, content', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,7 +49,7 @@ class Document extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'tblComments' => array(self::HAS_MANY, 'TblComment', 'document_id'),
-			'directory' => array(self::BELONGS_TO, 'TblDirectory', 'directory_id'),
+			'folder' => array(self::BELONGS_TO, 'TblFolder', 'folder_id'),
 		);
 	}
 
@@ -60,7 +60,7 @@ class Document extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'directory_id' => 'Directory',
+			'folder_id' => 'Folder',
 			'name' => 'Name',
 			'mime' => 'Mime',
 			'content' => 'Content',
@@ -86,7 +86,7 @@ class Document extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('directory_id',$this->directory_id,true);
+		$criteria->compare('folder_id',$this->folder_id,true);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('mime',$this->mime,true);
 		$criteria->compare('content',$this->content,true);

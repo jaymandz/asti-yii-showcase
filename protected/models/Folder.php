@@ -1,26 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "tbl_directory".
+ * This is the model class for table "tbl_folder".
  *
- * The followings are the available columns in table 'tbl_directory':
+ * The followings are the available columns in table 'tbl_folder':
  * @property string $id
  * @property string $name
  * @property string $parent_id
  *
  * The followings are the available model relations:
- * @property Directory $parent
- * @property Directory[] $tblDirectories
+ * @property Folder $parent
+ * @property Folder[] $tblDirectories
  * @property TblDocument[] $tblDocuments
  */
-class Directory extends CActiveRecord
+class Folder extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'tbl_directory';
+		return 'tbl_folder';
 	}
 
 	/**
@@ -47,9 +47,9 @@ class Directory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'parent' => array(self::BELONGS_TO, 'Directory', 'parent_id'),
-			'tblDirectories' => array(self::HAS_MANY, 'Directory', 'parent_id'),
-			'tblDocuments' => array(self::HAS_MANY, 'TblDocument', 'directory_id'),
+			'parent' => array(self::BELONGS_TO, 'Folder', 'parent_id'),
+			'tblDirectories' => array(self::HAS_MANY, 'Folder', 'parent_id'),
+			'tblDocuments' => array(self::HAS_MANY, 'TblDocument', 'folder_id'),
 		);
 	}
 
@@ -96,7 +96,7 @@ class Directory extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Directory the static model class
+	 * @return Folder the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
