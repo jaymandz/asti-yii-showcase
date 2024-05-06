@@ -2,9 +2,25 @@
 
 class ExplorerController extends Controller
 {
-	public function actionIndex()
+	public function actionIndex($path='/')
 	{
-		$this->render('index');
+		$currentFolders = Folder::model()->find([
+			'condition' => 'parent_id = NULL',
+		]);
+
+		$currentDocuments = Document::model()->find([
+			'condition' => 'folder_id = NULL',
+		]);
+
+		$pathChunks = explode('/', $path);
+		foreach ($pathChunks as $chunk)
+		{
+			if (! $chunk) continue;
+		}
+
+		$this->render('index', [
+			'path' => $path,
+		]);
 	}
 
 	// Uncomment the following methods and override them if needed
