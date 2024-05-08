@@ -26,7 +26,9 @@ class DocumentController extends Controller
 
 	public function actionShow($id)
 	{
-		$this->render('show');
+		$this->render('show', [
+			'document' => Document::model()->findByPk($id),
+		]);
 	}
 
 	public function actionStore()

@@ -7,41 +7,6 @@ $this->breadcrumbs=array(
 );
 ?>
 
-<script type="text/javascript">
-Alpine.data('mimeTypes', () => ({
-    content: [
-        {
-            value: 'application/vnd.ms-excel',
-            name: 'Microsoft Excel [.xls]',
-        },
-        {
-            value: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            name: 'Microsoft Excel (OpenXML) [.xlsx]',
-        },
-        {
-            value: 'application/vnd.ms-powerpoint',
-            name: 'Microsoft PowerPoint [.ppt]',
-        },
-        {
-            value: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            name: 'Microsoft PowerPoint (OpenXML) [.pptx]',
-        },
-        {
-            value: 'application/msword',
-            name: 'Microsoft Word [.doc]',
-        },
-        {
-            value: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            name: 'Microsoft Word (OpenXML) [.docx]',
-        },
-        {
-            value: 'application/vnd.oasis.opendocument.text',
-            name: 'OpenDocument text document [.odt]',
-        },
-    ],
-}))
-</script>
-
 <div class="btn-group mb-3" role="group">
     <a class="btn btn-secondary" role="button"
       href="<?= $this->createUrl('/explorer', ['path' => $path]) ?>">
@@ -64,22 +29,21 @@ Alpine.data('mimeTypes', () => ({
 
 <div class="mb-3">
 <label class="form-label" for="filenameInput">File type</label>
-<select required class="form-control" name="mime">
+<select required class="form-control" name="mime" x-data="mimeTypes">
     <option selected value="">Select a file type.</option>
     <optgroup label="Default types">
-        <option value="text/plain">Text</option>
-        <option value="application/octet-stream">Binary data</option>
+        <template x-for="(t, i) in defaults">
+            <option x-text="`${t.name} [usually ${t.extension}]`"
+              :value="t.value"></option>
+        </template>
     </optgroup>
-    <optgroup label="Other types" x-data="mimeTypes">
-        <template x-for="(t, i) in content">
-            <option x-bind:value="t.value" x-text="t.name"></option>
+    <optgroup label="Miscellaneous types">
+        <template x-for="(t, i) in misc">
+            <option x-text="`${t.name} [${t.extension}]`"
+              :value="t.value"></option>
         </template>
     </optgroup>
 </select>
-<div class="form-text" id="mimeTypeText">
-    The file type will be determined by the file extension of your upload, but
-    you can still select another one if you like.
-</div>
 </div>
 
 <div class="mb-3">

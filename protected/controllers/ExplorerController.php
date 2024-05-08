@@ -2,15 +2,26 @@
 
 class ExplorerController extends Controller
 {
+	public function actionDownload($id)
+	{
+		$document = Document::model()->find(
+			'id = :documentId',
+			['documentId' => $id],
+		);
+
+		echo $document->content;
+	}
+
 	public function actionIndex($path='/')
 	{
-		$currentFolders = Folder::model()->find([
-			'condition' => 'parent_id = NULL',
-		]);
+		$currentFolders = Folder::model()->findAll(
+			'parent_id IS NULL',
+		);
 
-		$currentDocuments = Document::model()->find([
-			'condition' => 'folder_id = NULL',
-		]);
+		$currentDocuments = Document::model()->findAll(
+			'folder_id IS NULL',
+		);
+		#print_r($currentDocuments); die;
 
 		$pathChunks = explode('/', $path);
 		foreach ($pathChunks as $chunk)
@@ -20,6 +31,8 @@ class ExplorerController extends Controller
 
 		$this->render('index', [
 			'path' => $path,
+			'folders' => $currentFolders,
+			'documents' => $currentDocuments,
 		]);
 	}
 
