@@ -2,6 +2,25 @@
 
 class ExplorerController extends Controller
 {
+    public $mimeExtensions = [
+        'text/plain' => '.txt',
+        'application/octet-stream' => '.bin',
+        'application/pdf' => '.pdf',
+        'image/gif' => '.gif',
+        'image/jpeg' => '.jpeg',
+        'application/vnd.ms-excel' => '.xls',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => '.xlsx',
+        'application/vnd.ms-powerpoint' => '.ppt',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => '.pptx',
+        'application/msword' => '.doc',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => '.docx',
+        'application/vnd.oasis.opendocument.presentation' => '.odp',
+        'application/vnd.oasis.opendocument.spreadsheet' => '.ods',
+        'application/vnd.oasis.opendocument.text' => '.odt',
+        'image/png' => '.png',
+        'application/zip' => '.zip',
+    ];
+
     public function actionDownload($id)
     {
         $document = Document::model()->find(
@@ -10,7 +29,7 @@ class ExplorerController extends Controller
         );
 
         Yii::app()->getRequest()->sendFile(
-            $document->name,
+            $document->name . $this->mimeExtensions[$document->mime],
             $document->content
         );
     }
@@ -18,11 +37,14 @@ class ExplorerController extends Controller
     public function actionIndex($path='/')
     {
         # Pretty sure there are plenty of redundancies here. Will fix later.
-        $folderId = $this->folderPathToId($path);
+        $folder = $this->pathToFolder($path);
+        $parentPath = ! $folder ? null : $this->folderToPath(
+            Folder::model()->findByPk($folder->parent_id)
+        );
         $currentFolders = [];
         $currentDocuments = [];
 
-        if (! $folderId)
+        if (! $folder)
         {
             $currentFolders = Folder::model()->findAll(
               'parent_id IS NULL');
@@ -32,55 +54,50 @@ class ExplorerController extends Controller
         else
         {
             $currentFolders = Folder::model()->findAll(
-              'parent_id = :parentId',
-              ['parentId' => $folderId]);
+              'parent_id = :parentId', ['parentId' => $folder->id]);
             $currentDocuments = Document::model()->findAll(
-              'folder_id = :folderId',
-              ['folderId' => $folderId]);
+              'folder_id = :folderId', ['folderId' => $folder->id]);
         }
 
         $this->render('index', [
             'path' => $path,
-            'folder' => Folder::model()->findByPk($folderId),
+            'folder' => $folder,
             'childFolders' => $currentFolders,
             'documents' => $currentDocuments,
-            'folderIdToPath' => [$this, 'folderIdToPath'],
+            'folderToPath' => [$this, 'folderToPath'],
+            'parentPath' => $parentPath,
         ]);
     }
 
-    protected function folderIdToPath($id)
+    protected function folderToPath($folder)
     {
         $path = '';
-        $currentId = $id;
-        while ($currentId != null)
+        $currentFolder = $folder;
+        while ($currentFolder != null)
         {
-            $folder = Folder::model()->findByPk($currentId);
-            $path = "/$folder->name$path";
-            $currentId = $folder->parent_id;
+            $path = "/$currentFolder->name$path";
+            $currentFolder = Folder::model()->findByPk(
+              $currentFolder->parent_id);
         }
         return $path;
     }
 
-    protected function folderPathToId($path)
+    protected function pathToFolder($path)
     {
-        $currentId = null;
-        $currentParentId = null;
+        $currentFolder = null;
         $chunks = explode('/', $path);
         foreach ($chunks as $chunk)
         {
             if (! $chunk) continue;
 
-            if (! $currentParentId) $folder = Folder::model()->find(
-              'name = :name AND parent_id IS NULL',
-              ['name' => $chunk]);
-            else $folder = Folder::model()->find(
+            if (! $currentFolder) $currentFolder = Folder::model()
+              ->find('name = :name AND parent_id IS NULL', ['name' => $chunk]);
+            else $currentFolder = Folder::model()->find(
               'name = :name AND parent_id = :parentId',
-              ['name' => $chunk, 'parentId' => $currentParentId]);
-            $currentId = $folder->id;
-            $currentParentId = $folder->parent_id;
+              ['name' => $chunk, 'parentId' => $currentFolder->id]);
         }
 
-        return $currentId;
+        return $currentFolder;
     }
 
     // Uncomment the following methods and override them if needed

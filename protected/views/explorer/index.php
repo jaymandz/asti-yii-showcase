@@ -20,7 +20,7 @@ $this->breadcrumbs=array(
     </a>
     <?php else: ?>
     <a class="btn btn-secondary" role="button"
-      href="<?= $this->createUrl('/explorer', ['path' => $folderIdToPath($folder->parent_id)]) ?>">
+      href="<?= $this->createUrl('/explorer', ['path' => $parentPath]) ?>">
         <span class="bi bi-arrow-90deg-up"></span>
         Parent folder
     </a>
@@ -47,25 +47,25 @@ $this->breadcrumbs=array(
 <?php else: ?>
 <?php if (sizeof($childFolders) > 0): ?>
 <ul class="list-group mb-3">
-<?php foreach ($childFolders as $folder): ?>
+<?php foreach ($childFolders as $cf): ?>
 <li class="list-group-item">
 <div class="row">
     <div class="col-10">
         <span class="bi bi-folder-fill text-warning-emphasis"></span>
         <span data-bs-toggle="tooltip" data-bs-placement="right"
           data-bs-title="File name">
-            <?= $folder->name ?>
+            <?= $cf->name ?>
         </span>
     </div>
     <div class="col-2">
         <a class="btn btn-outline-primary btn-sm" role="button"
           href="<?= $this->createUrl('/explorer',
-          ['path' => $folderIdToPath($folder->id)]) ?>">
+          ['path' => $folderToPath($cf)]) ?>">
             <span class="bi bi-folder2-open"></span>
         </a>
         <a class="btn btn-outline-danger btn-sm" role="button"
           href="<?= $this->createUrl('/folder/destroy',
-          ['id' => $folder->id]) ?>">
+          ['id' => $cf->id]) ?>">
             <span class="bi bi-trash"></span>
         </a>
     </div>
