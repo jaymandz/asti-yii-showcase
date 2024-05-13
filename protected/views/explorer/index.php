@@ -12,9 +12,15 @@ $this->breadcrumbs=array(
         <span class="bi bi-arrow-90deg-up"></span>
         Parent folder
     </a>
+    <?php elseif (! $folder->parent_id): ?>
+    <a class="btn btn-secondary" role="button"
+      href="<?= $this->createUrl('/explorer', ['path' => '/']) ?>">
+        <span class="bi bi-arrow-90deg-up"></span>
+        Parent folder
+    </a>
     <?php else: ?>
     <a class="btn btn-secondary" role="button"
-      href="<?= $this->createUrl('/explorer', ['path' => $path]) ?>">
+      href="<?= $this->createUrl('/explorer', ['path' => $folderIdToPath($folder->parent_id)]) ?>">
         <span class="bi bi-arrow-90deg-up"></span>
         Parent folder
     </a>
@@ -33,8 +39,15 @@ $this->breadcrumbs=array(
 
 <h4><?= $path ?></h4>
 
+<div class="overflow-y-auto" style="height: calc(100vh - 235px)">
+<?php if (sizeof($childFolders) == 0 && sizeof($documents) == 0): ?>
+<div class="alert alert-info">
+    This folder is empty.
+</div>
+<?php else: ?>
+<?php if (sizeof($childFolders) > 0): ?>
 <ul class="list-group mb-3">
-<?php foreach ($folders as $folder): ?>
+<?php foreach ($childFolders as $folder): ?>
 <li class="list-group-item">
 <div class="row">
     <div class="col-10">
@@ -46,8 +59,8 @@ $this->breadcrumbs=array(
     </div>
     <div class="col-2">
         <a class="btn btn-outline-primary btn-sm" role="button"
-          href="<?= $this->createUrl('/folder/show',
-          ['id' => $folder->id]) ?>">
+          href="<?= $this->createUrl('/explorer',
+          ['path' => $folderIdToPath($folder->id)]) ?>">
             <span class="bi bi-folder2-open"></span>
         </a>
         <a class="btn btn-outline-danger btn-sm" role="button"
@@ -60,8 +73,10 @@ $this->breadcrumbs=array(
 </li>
 <?php endforeach ?>
 </ul>
+<?php endif ?>
 
-<ul class="list-group mb-3">
+<?php if (sizeof($documents) > 0): ?>
+<ul class="list-group">
 <?php foreach ($documents as $document): ?>
 <li class="list-group-item">
 <div class="row" x-data="{ getExtensionFromMime, getIconFromMime, getNameFromMime }">
@@ -100,8 +115,15 @@ $this->breadcrumbs=array(
 </li>
 <?php endforeach ?>
 </ul>
+<?php endif ?>
+<?php endif ?>
+</div>
 
 <script type="text/javascript">
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]'
+)
+const tooltipList = [...tooltipTriggerList].map(
+    tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)
+)
 </script>

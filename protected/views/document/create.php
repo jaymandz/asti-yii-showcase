@@ -19,6 +19,9 @@ $this->breadcrumbs=array(
     </button>
 </div>
 
+<div class="card">
+<div class="card-body">
+
 <form action="<?= $this->createUrl('/document/store') ?>" method="post"
   enctype="multipart/form-data" id="fileUploadForm">
 <div class="mb-3">
@@ -60,3 +63,6 @@ $this->breadcrumbs=array(
     <input required class="form-control" name="content" type="file">
 </div>
 </form>
+
+</div>
+</div>

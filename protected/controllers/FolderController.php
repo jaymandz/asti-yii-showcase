@@ -33,15 +33,38 @@ class FolderController extends Controller
 	{
 		$folder = new Folder;
 		$folder->name = $_POST['name'];
+		$folder->parent_id = $this->folderPathToId($_POST['path']);
 		$folder->save();
 
-		$this->redirect(['/explorer']);
+		$this->redirect(['/explorer', 'path' => $_POST['path']]);
 	}
 
 	public function actionUpdate()
 	{
 		#
 	}
+
+	protected function folderPathToId($path)
+    {
+        $currentId = null;
+        $currentParentId = null;
+        $chunks = explode('/', $path);
+        foreach ($chunks as $chunk)
+        {
+            if (! $chunk) continue;
+
+            if (! $currentParentId) $folder = Folder::model()->find(
+              'name = :name AND parent_id IS NULL',
+              ['name' => $chunk]);
+            else $folder = Folder::model()->find(
+              'name = :name AND parent_id = :parentId',
+              ['name' => $chunk, 'parentId' => $currentParentId]);
+            $currentId = $folder->id;
+            $currentParentId = $folder->parent_id;
+        }
+
+        return $currentId;
+    }
 
 	// Uncomment the following methods and override them if needed
 	/*
