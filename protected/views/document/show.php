@@ -9,12 +9,13 @@ $this->breadcrumbs=array(
 
 <div class="btn-group mb-3" role="group">
 	<a class="btn btn-secondary" role="button"
-      href="javascript:;">
+      href="<?= $this->createUrl('/explorer', ['path' => $parentPath]) ?>">
         <span class="bi bi-arrow-90deg-up"></span>
         To folder
     </a>
 	<a class="btn btn-secondary" role="button"
-      href="javascript:;">
+      href="<?= $this->createUrl('/explorer/download',
+	  ['id' => $document->id]) ?>">
         <span class="bi bi-download"></span>
         Download
     </a>

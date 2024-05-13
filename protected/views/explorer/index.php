@@ -12,17 +12,31 @@ $this->breadcrumbs=array(
         <span class="bi bi-arrow-90deg-up"></span>
         Parent folder
     </a>
+    <a class="btn btn-secondary disabled" href="javascript:;" role="button">
+        <span class="bi bi-pen"></span>
+        Edit
+    </a>
     <?php elseif (! $folder->parent_id): ?>
     <a class="btn btn-secondary" role="button"
       href="<?= $this->createUrl('/explorer', ['path' => '/']) ?>">
         <span class="bi bi-arrow-90deg-up"></span>
         Parent folder
     </a>
+    <a class="btn btn-secondary" role="button"
+      href="<?= $this->createUrl('/folder/edit', ['id' => $folder->id]) ?>">
+        <span class="bi bi-pen"></span>
+        Edit
+    </a>
     <?php else: ?>
     <a class="btn btn-secondary" role="button"
       href="<?= $this->createUrl('/explorer', ['path' => $parentPath]) ?>">
         <span class="bi bi-arrow-90deg-up"></span>
         Parent folder
+    </a>
+    <a class="btn btn-secondary" role="button"
+      href="<?= $this->createUrl('/folder/edit', ['id' => $folder->id]) ?>">
+        <span class="bi bi-pen"></span>
+        Edit
     </a>
     <?php endif ?>
     <a class="btn btn-secondary" role="button"
@@ -37,9 +51,9 @@ $this->breadcrumbs=array(
     </a>
 </div>
 
-<h4><?= $path ?></h4>
+<h4 class="mb-3"><?= $path ?></h4>
 
-<div class="overflow-y-auto" style="height: calc(100vh - 235px)">
+<div class="overflow-y-auto" style="height: calc(100vh - 251px)">
 <?php if (sizeof($childFolders) == 0 && sizeof($documents) == 0): ?>
 <div class="alert alert-info">
     This folder is empty.
@@ -105,11 +119,10 @@ $this->breadcrumbs=array(
           ['id' => $document->id]) ?>">
             <span class="bi bi-download"></span>
         </a>
-        <a class="btn btn-outline-danger btn-sm" role="button"
-          href="<?= $this->createUrl('/document/destroy',
-          ['id' => $document->id]) ?>">
+        <button type="button" class="btn btn-outline-danger btn-sm"
+          @click="confirmDocumentDelete(<?= $document->id ?>)">
             <span class="bi bi-trash"></span>
-        </a>
+        </button>
     </div>
 </div>
 </li>
@@ -119,6 +132,27 @@ $this->breadcrumbs=array(
 <?php endif ?>
 </div>
 
+<div class="fade modal" id="confirmDocumentDeleteModal">
+<div class="modal-dialog">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5>Confirm document delete</h5>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to delete this document?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary" @click="deleteDocument()">
+            OK
+        </button>
+    </div>
+</div>
+</div>
+</div>
+
 <script type="text/javascript">
 const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]'
@@ -126,4 +160,24 @@ const tooltipTriggerList = document.querySelectorAll(
 const tooltipList = [...tooltipTriggerList].map(
     tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)
 )
+
+const confirmDocumentDeleteModal = new bootstrap.Modal(
+    '#confirmDocumentDeleteModal',
+    {},
+)
+
+var documentToDeleteId
+
+function confirmDocumentDelete(id)
+{
+    documentToDeleteId = id
+    confirmDocumentDeleteModal.show()
+}
+
+function deleteDocument()
+{
+    window.location.href =
+      '<?= $this->createUrl('/document/destroy', ['id' => '']) ?>'+
+      documentToDeleteId
+}
 </script>

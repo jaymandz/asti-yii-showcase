@@ -11,7 +11,12 @@ class DocumentController extends Controller
 
 	public function actionDestroy($id)
 	{
-		Document::model()->findByPk($id)->delete();
+		$document = Document::model()->findByPk($id);
+		$parentPath = $this->folderToPath(
+			Folder::model()->findByPk($document->folder_id)
+		);
+		$document->delete();
+		$this->redirect(['/explorer', 'path' => $parentPath]);
 	}
 
 	public function actionEdit($id)
@@ -26,26 +31,61 @@ class DocumentController extends Controller
 
 	public function actionShow($id)
 	{
+		$document = Document::model()->findByPk($id);
 		$this->render('show', [
-			'document' => Document::model()->findByPk($id),
+			'document' => $document,
+			'parentPath' => $this->folderToPath(
+			  Folder::model()->findByPk($document->folder_id)),
 		]);
 	}
 
 	public function actionStore()
 	{
 		$document = new Document;
+		$document->folder_id = $this->pathToFolder($_POST['path'])->id ?? null;
 		$document->name = $_POST['name'];
 		$document->mime = $_POST['mime'];
 		$document->content = file_get_contents($_FILES['content']['tmp_name']);
 		$document->save();
 
-		$this->redirect(['/explorer']);
+		$this->redirect(['/explorer', 'path' => $_POST['path']]);
 	}
 
 	public function actionUpdate($id)
 	{
 		#
 	}
+
+	protected function folderToPath($folder)
+    {
+        $path = '/';
+        $currentFolder = $folder;
+        while ($currentFolder != null)
+        {
+            $path = "/$currentFolder->name$path";
+            $currentFolder = Folder::model()->findByPk(
+              $currentFolder->parent_id);
+        }
+        return $path;
+    }
+
+	protected function pathToFolder($path)
+    {
+        $currentFolder = null;
+        $chunks = explode('/', $path);
+        foreach ($chunks as $chunk)
+        {
+            if (! $chunk) continue;
+
+            if (! $currentFolder) $currentFolder = Folder::model()
+              ->find('name = :name AND parent_id IS NULL', ['name' => $chunk]);
+            else $currentFolder = Folder::model()->find(
+              'name = :name AND parent_id = :parentId',
+              ['name' => $chunk, 'parentId' => $currentFolder->id]);
+        }
+
+        return $currentFolder;
+    }
 
 	// Uncomment the following methods and override them if needed
 	/*
