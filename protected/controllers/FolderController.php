@@ -9,9 +9,14 @@ class FolderController extends Controller
 		]);
 	}
 
-	public function actionDestroy()
+	public function actionDestroy($id)
 	{
-		#
+		$folder = Folder::model()->findByPk($id);
+		$parentPath = $this->folderToPath(
+			Folder::model()->findByPk($folder->parent_id)
+		);
+		$folder->delete();
+		$this->redirect(['/explorer', 'path' => $parentPath]);
 	}
 
 	public function actionEdit()
@@ -43,6 +48,19 @@ class FolderController extends Controller
 	{
 		#
 	}
+
+	protected function folderToPath($folder)
+    {
+        $path = '/';
+        $currentFolder = $folder;
+        while ($currentFolder != null)
+        {
+            $path = "/$currentFolder->name$path";
+            $currentFolder = Folder::model()->findByPk(
+              $currentFolder->parent_id);
+        }
+        return $path;
+    }
 
 	protected function pathToFolder($path)
     {

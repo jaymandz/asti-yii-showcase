@@ -77,11 +77,10 @@ $this->breadcrumbs=array(
           ['path' => $folderToPath($cf)]) ?>">
             <span class="bi bi-folder2-open"></span>
         </a>
-        <a class="btn btn-outline-danger btn-sm" role="button"
-          href="<?= $this->createUrl('/folder/destroy',
-          ['id' => $cf->id]) ?>">
+        <button type="button" class="btn btn-outline-danger btn-sm"
+          @click="confirmFolderDelete(<?= $cf->id ?>)">
             <span class="bi bi-trash"></span>
-        </a>
+        </button>
     </div>
 </div>
 </li>
@@ -132,6 +131,30 @@ $this->breadcrumbs=array(
 <?php endif ?>
 </div>
 
+<div class="fade modal" id="confirmFolderDeleteModal">
+<div class="modal-dialog">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5>Confirm folder delete</h5>
+    </div>
+    <div class="modal-body">
+        <p>
+            Are you sure you want to delete this folder? All its contents will
+            be deleted.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary" @click="deleteFolder()">
+            OK
+        </button>
+    </div>
+</div>
+</div>
+</div>
+
 <div class="fade modal" id="confirmDocumentDeleteModal">
 <div class="modal-dialog">
 <div class="modal-content">
@@ -161,17 +184,33 @@ const tooltipList = [...tooltipTriggerList].map(
     tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)
 )
 
-const confirmDocumentDeleteModal = new bootstrap.Modal(
-    '#confirmDocumentDeleteModal',
-    {},
+const confirmFolderDeleteModal = new bootstrap.Modal(
+    '#confirmFolderDeleteModal', {},
 )
 
-var documentToDeleteId
+const confirmDocumentDeleteModal = new bootstrap.Modal(
+    '#confirmDocumentDeleteModal', {},
+)
+
+var folderToDeleteId, documentToDeleteId
+
+function confirmFolderDelete(id)
+{
+    folderToDeleteId = id
+    confirmFolderDeleteModal.show()
+}
 
 function confirmDocumentDelete(id)
 {
     documentToDeleteId = id
     confirmDocumentDeleteModal.show()
+}
+
+function deleteFolder()
+{
+    window.location.href =
+      '<?= $this->createUrl('/folder/destroy', ['id' => '']) ?>'+
+      folderToDeleteId
 }
 
 function deleteDocument()
