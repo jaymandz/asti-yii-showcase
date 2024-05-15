@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="<?= Yii::app()->request->baseUrl ?>/libraries/bootstrap/5.3.3/dist/css/bootstrap.css">
 <link rel="stylesheet" href="<?= Yii::app()->request->baseUrl ?>/libraries/bootstrap-icons/1.11.3/font/bootstrap-icons.css">
-<title><?= CHtml::encode($this->pageTitle) ?></title>
+<title><?= CHtml::encode($pageTitle) ?></title>
 
 <body>
 
@@ -202,15 +202,15 @@ function getMime(mime)
 
 <div class="container-fluid">
 
-<?php if (isset($this->breadcrumbs)): ?>
+<?php if (isset($breadcrumbs)): ?>
 <nav aria-label="breadcrumb" class="fw-lighter mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="<?= $this->createUrl('/site/index') ?>">Home</a>
         </li>
-        <?php foreach ($this->breadcrumbs as $c => $crumb): ?>
+        <?php foreach ($breadcrumbs as $c => $crumb): ?>
         <?php if (is_int($c)): ?>
-        <?php if ($c == array_key_last($this->breadcrumbs)): ?>
+        <?php if ($c == array_key_last($breadcrumbs)): ?>
         <li aria-current="page" class="breadcrumb-item active">
             <?= $crumb ?>
         </li>
@@ -229,7 +229,7 @@ function getMime(mime)
 </nav>
 <?php endif ?>
 
-<?= $content ?>
+<?= $this->section('content') ?>
 
 </div>
 

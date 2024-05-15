@@ -1,10 +1,34 @@
 <?php
 
+require __DIR__ . '/../extensions/autoload.php';
+
+use League\Plates\Engine;
+
 class DocumentController extends Controller
 {
+	public $engine;
+
+	public function __construct($id, $module=null)
+	{
+		parent::__construct($id, $module);
+
+		$this->engine = new Engine(__DIR__ . '/../views');
+		$this->engine->registerFunction(
+			'createUrl',
+			[$this, 'createUrl']
+		);
+		$this->engine->registerFunction(
+			'folderToPath',
+			[$this, 'folderToPath']
+		);
+		$this->engine->addData([
+			'pageTitle' => $this->pageTitle,
+		]);
+	}
+
 	public function actionCreate($path)
 	{
-		$this->render('create', [
+		echo $this->engine->render('document/create', [
 			'path' => $path,
 		]);
 	}
@@ -21,7 +45,9 @@ class DocumentController extends Controller
 
 	public function actionEdit($id)
 	{
-		$this->render('edit');
+		echo $this->engine->render('document/edit', [
+			'document' => Document::model()->findByPk($id),
+		]);
 	}
 
 	public function actionIndex()
@@ -56,7 +82,7 @@ class DocumentController extends Controller
 		#
 	}
 
-	protected function folderToPath($folder)
+	public function folderToPath($folder)
     {
         $path = '/';
         $currentFolder = $folder;
