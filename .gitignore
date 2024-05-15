@@ -1,2 +1,4 @@
 assets/
 protected/runtime/
+vendor/
+composer.lock
