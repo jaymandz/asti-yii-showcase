@@ -1,5 +1,8 @@
 {
     "require": {
         "league/plates": "^3.5"
+    },
+    "config": {
+        "vendor-dir": "protected/extensions"
     }
 }
