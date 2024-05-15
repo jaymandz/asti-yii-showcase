@@ -19,6 +19,8 @@ $this->breadcrumbs=array(
     </button>
 </div>
 
+<div class="card">
+<div class="card-body">
 <form action="<?= $this->createUrl('/folder/store') ?>" method="post"
   id="folderCreateForm">
 <div class="mb-3">
@@ -36,3 +38,5 @@ $this->breadcrumbs=array(
     </div>
 </div>
 </form>
+</div>
+</div>

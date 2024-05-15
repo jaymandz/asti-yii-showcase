@@ -11,8 +11,8 @@
  * @property string $content
  *
  * The followings are the available model relations:
- * @property TblComment[] $tblComments
- * @property TblFolder $folder
+ * @property Comment[] $comments
+ * @property Folder $folder
  */
 class Document extends CActiveRecord
 {
@@ -48,8 +48,8 @@ class Document extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'tblComments' => array(self::HAS_MANY, 'TblComment', 'document_id'),
-			'folder' => array(self::BELONGS_TO, 'TblFolder', 'folder_id'),
+			'comments' => array(self::HAS_MANY, 'Comment', 'document_id'),
+			'folder' => array(self::BELONGS_TO, 'Folder', 'folder_id'),
 		);
 	}
 

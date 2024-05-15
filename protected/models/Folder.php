@@ -10,8 +10,8 @@
  *
  * The followings are the available model relations:
  * @property Folder $parent
- * @property Folder[] $tblDirectories
- * @property TblDocument[] $tblDocuments
+ * @property Folder[] $directories
+ * @property Document[] $documents
  */
 class Folder extends CActiveRecord
 {
@@ -48,8 +48,8 @@ class Folder extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'parent' => array(self::BELONGS_TO, 'Folder', 'parent_id'),
-			'tblDirectories' => array(self::HAS_MANY, 'Folder', 'parent_id'),
-			'tblDocuments' => array(self::HAS_MANY, 'TblDocument', 'folder_id'),
+			'directories' => array(self::HAS_MANY, 'Folder', 'parent_id'),
+			'documents' => array(self::HAS_MANY, 'Document', 'folder_id'),
 		);
 	}
 

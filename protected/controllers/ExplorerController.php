@@ -41,29 +41,14 @@ class ExplorerController extends Controller
         $parentPath = ! $folder ? null : $this->folderToPath(
             Folder::model()->findByPk($folder->parent_id)
         );
-        $currentFolders = [];
-        $currentDocuments = [];
-
-        if (! $folder)
-        {
-            $currentFolders = Folder::model()->findAll(
-              'parent_id IS NULL');
-            $currentDocuments = Document::model()->findAll(
-              'folder_id IS NULL');
-        }
-        else
-        {
-            $currentFolders = Folder::model()->findAll(
-              'parent_id = :parentId', ['parentId' => $folder->id]);
-            $currentDocuments = Document::model()->findAll(
-              'folder_id = :folderId', ['folderId' => $folder->id]);
-        }
 
         $this->render('index', [
             'path' => $path,
             'folder' => $folder,
-            'childFolders' => $currentFolders,
-            'documents' => $currentDocuments,
+            'childFolders' => $folder ? $folder->directories : Folder::model()
+              ->findAll('parent_id IS NULL'),
+            'documents' => $folder ? $folder->documents : Document::model()
+              ->findAll('folder_id IS NULL'),
             'folderToPath' => [$this, 'folderToPath'],
             'parentPath' => $parentPath,
         ]);
