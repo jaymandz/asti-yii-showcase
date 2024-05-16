@@ -32,6 +32,8 @@ class Controller extends CController
 	{
 		parent::__construct($id, $module);
 
+		$this->pageTitle = 'ASTI Yii Showcase';
+
 		$this->engine = new Engine(__DIR__ . '/../views');
 		$this->engine->registerFunction(
 			'createUrl',

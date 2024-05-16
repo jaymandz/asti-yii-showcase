@@ -164,7 +164,7 @@ function getMime(mime)
 <nav class="bg-info navbar navbar-expand ">
 <div class="container-fluid">
 <a class="navbar-brand" href="#">
-    <?= CHtml::encode(Yii::app()->name) ?>
+    <?= CHtml::encode($pageTitle) ?>
 </a>
 <div class="collapse navbar-collapse">
 <ul class="mb-2 mb-lg-0 me-auto navbar-nav">
