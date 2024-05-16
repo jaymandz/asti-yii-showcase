@@ -79,7 +79,12 @@ class DocumentController extends Controller
 
 	public function actionUpdate($id)
 	{
-		#
+		$document = Document::model()->findByPk($id);
+		$document->name = $_POST['name'];
+		$document->mime = $_POST['mime'];
+		$document->save();
+
+		$this->redirect(['/document/show', 'id' => $id]);
 	}
 
 	public function folderToPath($folder)

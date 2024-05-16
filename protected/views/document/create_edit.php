@@ -19,7 +19,7 @@ $this->layout('layouts/main_plates', [
 <div class="card">
 <div class="card-body overflow-y-scroll" style="height: calc(100vh - 183px)">
 
-<form action="<?= $this->createUrl('/document/store') ?>" method="post"
+<form action="<?= $formActionUrl ?>" method="post"
   enctype="multipart/form-data" id="fileUploadForm">
 <div class="mb-3">
     <label class="form-label" for="filenameInput">Filename</label>
@@ -66,7 +66,8 @@ $this->layout('layouts/main_plates', [
 
 <div class="mb-3">
     <label class="form-label" for="filenameInput">File to upload</label>
-    <input required class="form-control" name="content" type="file">
+    <input class="form-control" name="content" type="file"
+      <?= $document ? '' : 'required' ?>>
 </div>
 </form>
 
