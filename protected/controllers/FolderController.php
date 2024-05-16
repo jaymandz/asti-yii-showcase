@@ -4,7 +4,7 @@ class FolderController extends Controller
 {
 	public function actionCreate($path)
 	{
-		$this->render('create', [
+		echo $this->engine->render('folder/create', [
 			'path' => $path,
 		]);
 	}
@@ -19,9 +19,11 @@ class FolderController extends Controller
 		$this->redirect(['/explorer', 'path' => $parentPath]);
 	}
 
-	public function actionEdit()
+	public function actionEdit($id)
 	{
-		$this->render('edit');
+		echo $this->engine->render('folder/edit', [
+			'folder' => Folder::model()->findByPk($id),
+		]);
 	}
 
 	public function actionIndex()
@@ -38,18 +40,22 @@ class FolderController extends Controller
 	{
 		$folder = new Folder;
 		$folder->name = $_POST['name'];
-		$folder->parent_id = $this->pathToFolder($_POST['path'])->id;
+		$folder->parent_id = $this->pathToFolder($_POST['path'])->id ?? null;
 		$folder->save();
 
 		$this->redirect(['/explorer', 'path' => $_POST['path']]);
 	}
 
-	public function actionUpdate()
+	public function actionUpdate($id)
 	{
-		#
+		$folder = Folder::model()->findByPk($id);
+		$folder->name = $_POST['name'];
+		$folder->save();
+
+		$this->redirect(['/explorer', 'path' => $this->folderToPath($folder)]);
 	}
 
-	protected function folderToPath($folder)
+	public function folderToPath($folder)
     {
         $path = '/';
         $currentFolder = $folder;

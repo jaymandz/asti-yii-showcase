@@ -1,14 +1,15 @@
 <?php
-/* @var $this FolderController */
-
-$this->breadcrumbs=array(
-	'Folder'=>array('/folder'),
-	'Edit',
-);
+$this->layout('folder/create_edit', [
+	'folder' => $folder,
+	'formActionUrl' => $this->createUrl('/folder/update', [
+		'id' => $folder->id,
+	]),
+    'path' => $this->folderToPath(
+		Folder::model()->findByPk($folder->parent_id)
+	),
+    'breadcrumbs' => [
+        'Folder' => ['/folder'],
+        'Edit',
+    ],
+]);
 ?>
-<h1><?php echo $this->id . '/' . $this->action->id; ?></h1>
-
-<p>
-	You may change the content of this page by modifying
-	the file <tt><?php echo __FILE__; ?></tt>.
-</p>

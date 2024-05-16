@@ -67,7 +67,7 @@ $this->layout('layouts/main_plates', [
 <div class="mb-3">
     <label class="form-label" for="filenameInput">File to upload</label>
     <input class="form-control" name="content" type="file"
-      <?= $document ? '' : 'required' ?>>
+      <?= isset($document) ? '' : 'required' ?>>
 </div>
 </form>
 

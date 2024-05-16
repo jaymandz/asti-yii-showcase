@@ -3,6 +3,11 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
+
+ require __DIR__ . '/../extensions/autoload.php';
+
+use League\Plates\Engine;
+
 class Controller extends CController
 {
 	/**
@@ -20,4 +25,24 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+	public $engine;
+
+	public function __construct($id, $module=null)
+	{
+		parent::__construct($id, $module);
+
+		$this->engine = new Engine(__DIR__ . '/../views');
+		$this->engine->registerFunction(
+			'createUrl',
+			[$this, 'createUrl']
+		);
+		$this->engine->registerFunction(
+			'folderToPath',
+			[$this, 'folderToPath']
+		);
+		$this->engine->addData([
+			'pageTitle' => $this->pageTitle,
+		]);
+	}
 }

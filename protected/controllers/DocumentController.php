@@ -1,31 +1,7 @@
 <?php
 
-require __DIR__ . '/../extensions/autoload.php';
-
-use League\Plates\Engine;
-
 class DocumentController extends Controller
 {
-	public $engine;
-
-	public function __construct($id, $module=null)
-	{
-		parent::__construct($id, $module);
-
-		$this->engine = new Engine(__DIR__ . '/../views');
-		$this->engine->registerFunction(
-			'createUrl',
-			[$this, 'createUrl']
-		);
-		$this->engine->registerFunction(
-			'folderToPath',
-			[$this, 'folderToPath']
-		);
-		$this->engine->addData([
-			'pageTitle' => $this->pageTitle,
-		]);
-	}
-
 	public function actionCreate($path)
 	{
 		echo $this->engine->render('document/create', [
