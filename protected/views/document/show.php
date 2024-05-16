@@ -7,6 +7,36 @@ $this->breadcrumbs=array(
 );
 ?>
 
+<script type="text/javascript">
+function updateComment(cmtId, updateType)
+{
+    fetch("<?= $this->createUrl('/comment/show', ['id' => '']) ?>"+cmtId)
+    .then(r => r.json())
+    .then(data => {
+        var numLikes = data.num_likes + (updateType == 'like' ? 1 : 0)
+        var numDislikes = data.num_dislikes + (updateType == 'dislike' ? 1 : 0)
+
+        var formData = new FormData()
+        formData.append('document_id', data.document_id)
+        formData.append('content', data.content)
+        formData.append('num_likes', numLikes)
+        formData.append('num_dislikes', numDislikes)
+
+        return fetch(
+            "<?= $this->createUrl('/comment/update', ['id' => '']) ?>"+cmtId,
+            { method: 'POST', body: formData },
+        )
+    })
+    .then(r => { location.reload() })
+}
+
+function renderAsHtml(markdown)
+{
+    var converter = new showdown.Converter()
+    return converter.makeHtml(markdown)
+}
+</script>
+
 <div class="btn-group mb-3" role="group">
 	<a class="btn btn-secondary" role="button"
       href="<?= $this->createUrl('/explorer', ['path' => $parentPath]) ?>">
@@ -35,15 +65,23 @@ $this->breadcrumbs=array(
 
 <button type="button" class="btn btn-secondary mb-2" data-bs-toggle="modal"
   data-bs-target="#commentAddModal">
+    <span class="bi bi-chat-square-dots"></span>
 	Add comment
 </button>
 
-<?php if (sizeof($document->comments) > 0): ?>
+<?php if (sizeof($document->comments) == 0): ?>
+<div class="alert alert-info" role="alert">
+    There are no comments yet.
+</div>
+<?php else: ?>
+<div class="overflow-y-scroll" style="height: calc(100vh - 308px)">
 <ul class="list-group">
 <?php foreach ($document->comments as $comment): ?>
 <li class="list-group-item">
 <div class="row">
-    <div class="col-9"><?= $comment->content ?></div>
+    <div class="col-9" x-data="{ content: `<?= $comment->content ?>` }">
+        <div x-html="renderAsHtml(content)"></div>
+    </div>
     <div class="col-2">
         <span class="bi bi-hand-thumbs-up-fill"></span>
         <?= $comment->num_likes ?>
@@ -64,6 +102,7 @@ $this->breadcrumbs=array(
 </li>
 <?php endforeach ?>
 </ul>
+</div>
 <?php endif ?>
 
 <div class="fade modal" id="commentAddModal">
@@ -78,7 +117,7 @@ $this->breadcrumbs=array(
 		  	<input type="hidden" name="document_id"
 			  value="<?= $document->id ?>">
 			<textarea required class="form-control" name="content"
-			  placeholder="Enter your comment here." rows="5"
+			  placeholder="Enter your comment using Markdown here." rows="5"
 			  style="resize: none"></textarea>
 		</form>
     </div>
@@ -93,27 +132,3 @@ $this->breadcrumbs=array(
 </div>
 </div>
 </div>
-
-<script type="text/javascript">
-function updateComment(cmtId, updateType)
-{
-    fetch("<?= $this->createUrl('/comment/show', ['id' => '']) ?>"+cmtId)
-    .then(r => r.json())
-    .then(data => {
-        var numLikes = data.num_likes + (updateType == 'like' ? 1 : 0)
-        var numDislikes = data.num_dislikes + (updateType == 'dislike' ? 1 : 0)
-
-        var formData = new FormData()
-        formData.append('document_id', data.document_id)
-        formData.append('content', data.content)
-        formData.append('num_likes', numLikes)
-        formData.append('num_dislikes', numDislikes)
-
-        return fetch(
-            "<?= $this->createUrl('/comment/update', ['id' => '']) ?>"+cmtId,
-            { method: 'POST', body: formData },
-        )
-    })
-    .then(r => { location.reload() })
-}
-</script>

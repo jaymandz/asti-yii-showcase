@@ -53,7 +53,7 @@ $this->breadcrumbs=array(
 
 <h4 class="mb-3"><?= $path ?></h4>
 
-<div class="overflow-y-auto" style="height: calc(100vh - 251px)">
+<div class="overflow-y-auto" style="height: calc(100vh - 226px)">
 <?php if (sizeof($childFolders) == 0 && sizeof($documents) == 0): ?>
 <div class="alert alert-info">
     This folder is empty.
